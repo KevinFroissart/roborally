@@ -192,8 +192,8 @@ static void robot_push(
 
   /* good luck with that */
   /* (five years later) yeah sure */
-  robot.location[0] += (+direction%2) * (+direction - 2) ;
-  robot.location[1] += ((1 + +direction)%2) * (1 - +direction) ;
+  robot.location.line += (+direction%2) * (+direction - 2) ;
+  robot.location.column += ((1 + +direction)%2) * (1 - +direction) ;
 }
 
 /* rotate robot in a direction */
