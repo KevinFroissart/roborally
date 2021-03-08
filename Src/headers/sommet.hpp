@@ -2,35 +2,18 @@
 #define SOMMET_HPP_
 #include <iostream>
 #include <vector>
+
 #include "sommet.hpp"
+#include "board.hpp"
 
-struct Location
-{
-
-    Location(int l, int c);
-    Location() {}
-
-    bool operator==(const Location &rhs) const;
-
-    int line;
-    int column;
-};
-
-enum struct Status
-{
-    EAST,
-    NORTH,
-    WEST,
-    SOUTH,
-    DEAD
-};
-
-class sommet
+class Sommet
 {
 public:
-    Location location;
-    Status direction;
-    vector<sommet> voisin;
+    RR::Location location;
+    RR::RobotStatus direction;
+    vector<Sommet> voisin;
+
+    Sommet(RR::Location, RR::Robot::Status, std::vector<Sommet>);
 
 private:
 };
