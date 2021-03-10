@@ -1,71 +1,55 @@
+CXX      = g++
+
 .DEFAULT_GOAL := all
 
-CXX       = g++
+SOURCES = 
+SOURCES += board.cpp
+
+OBJECTS = $(SOURCES:.cpp=.o)
+
 CXXFLAGS += -g -Wall -pedantic
-LDFLAGS  +=
+LDFLAGS +=
 
-TARGET = bin/
-CPATH  = src/
-HPATH  = header/
-
-HEADERS     = $(wildcard $(HPATH)*.hpp)
-ALL_SOURCES = $(wildcard $(CPATH)*.cpp)
-
-FILE    += board.cpp
-SOURCES += $(CPATH)$(FILE)
-OBJECTS  = $(foreach source, $(SOURCES), obj/$(patsubst src/%.cpp,%.o,$(source)))
-
-board : $(OBJECTS) $(HEADERS)
-	$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
+$(OBJECTS) : %.o : %.cpp
+	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@
 
 CLEAN_OBJECTS = $(OBJECTS)
-TARGETS       = 
+TARGETS = 
 
 ########## test_board ##########
 
-TEST_BOARD_FILE    += test_board.cpp
-TEST_BOARD_SOURCES += $(CPATH)$(TEST_BOARD_FILE)
-TEST_BOARD_OBJECTS  = $(foreach source, $(TEST_BOARD_SOURCES), obj/$(patsubst src/%.cpp,%.o,$(source)))
+TEST_BOARD_SOURCES = test_board.cpp
+TEST_BOARD_OBJECTS = $(TEST_BOARD_SOURCES:.cpp=.o)
 
-bin/test_board : $(TEST_BOARD_OBJECTS) $(OBJECTS) $(HEADERS)
+test_board : $(TEST_BOARD_OBJECTS) $(OBJECTS) $(HEADERS)
 	$(CXX) $(TEST_BOARD_OBJECTS) $(OBJECTS) -o $@ $(LDFLAGS)
+	
+$(TEST_BOARD_OBJECTS): %.o : %.cpp
+	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@
 
-
-all            : $(TARGET)test_board
-TARGETS       += $(TARGET)test_board
+all : test_board
+TARGETS += test_board
 CLEAN_OBJECTS += $(TEST_BOARD_OBJECTS)
 
 ########## app ##########
 
-APP_FILE    += app.cpp
-APP_SOURCES += $(CPATH)$(APP_FILE)
-APP_OBJECTS  = $(foreach source, $(APP_SOURCES), obj/$(patsubst src/%.cpp,%.o,$(source)))
+APP_SOURCES = app.cpp
+APP_OBJECTS = $(APP_SOURCES:.cpp=.o)
 
-bin/app : $(APP_OBJECTS) $(OBJECTS) $(HEADERS)
+app : $(APP_OBJECTS) $(OBJECTS) $(HEADERS)
 	$(CXX) -pthread $(APP_OBJECTS) $(OBJECTS) -o $@ $(LDFLAGS)
+	
+$(APP_OBJECTS): %.o : %.cpp
+	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@
 
-all            : $(TARGET)app
-TARGETS       += $(TARGET)app
+all : app
+TARGETS += app
 CLEAN_OBJECTS += $(APP_OBJECTS)
 
-########## run ##########
-
-run : all
-	./$(TARGET)app board.txt
-
 ########## cleanup ##########
+DEPS = $(CLEAN_OBJECTS:.o=.d)
 
 clean:
-	@rm -f $(TARGETS) $(CLEAN_OBJECTS)
-	@rm -f obj/*.d
-	@rm makefile.dep
+	@rm -f $(DEPS) $(TARGETS) $(CLEAN_OBJECTS)
 
-makefile.dep: $(ALL_SOURCES) $(HEADERS)
-	@echo "Calculating dependencies..."
-	@$(RM) makefile.dep
-	@for file in $(ALL_SOURCES); do echo "obj/`g++ $(CXXFLAGS) -MM $$file`" >> makefile.dep; done
-
-obj/%.o: src/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-include makefile.dep
+-include $(DEPS)

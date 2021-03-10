@@ -9,11 +9,10 @@
 class Sommet
 {
 public:
-    RR::Location location;
-    RR::RobotStatus direction;
-    vector<Sommet> voisin;
+    RR::Robot robot;
+    std::vector<RR::Robot> voisin;
 
-    Sommet(RR::Location, RR::Robot::Status, std::vector<Sommet>);
+    Sommet(RR::Robot, std::vector<RR::Robot>);
 
 private:
 };

@@ -1,48 +1,53 @@
 #include <queue>
 
-#include "graphe.hpp"
-#include "board.hpp"
+#include "../headers/graphe.hpp"
+#include "../headers/board.hpp"
 
 using namespace std;
 
 /**
  * Constructeur par défaut avec une liste vide
  */
-Graphe::Graphe() {
+Graphe::Graphe()
+{
     map = std::map<RR::Location, Sommet>();
 }
 
 /**
  * Construit un graphe a partir d'un robot et d'un plateau
  */
-Graphe::Graphe(RR::Robot r, RR::Board b) {
+Graphe::Graphe(RR::Robot r, RR::Board b)
+{
     std::queue<RR::Robot> aTraiter;
     aTraiter.push(r);
 
     RR::Robot r();
-    while(!aTraiter.empty()) {
+    while (!aTraiter.empty())
+    {
         r = aTraiter.front();
         aTraiter.pop();
-        std::vector<Sommet> voisins;
+        std::vector<RR::Robot> voisins;
 
         //pour chaque direction, faire jouer le robot
-        for(RR::Robot::Move move : moves) {
+        for (RR::Robot::Move move : moves)
+        {
             RR::Robot copie = r;
             b.play(copie, move);
-            if (copie.status != RR::Robot::Status::DEAD) {
+            if (copie.status != RR::Robot::Status::DEAD)
+            {
                 // ajouter la cible à la liste des voisins
                 //TODO modifier la liste de voisins? Si les voisins sont des sommets on passe sur du recursif,
                 // complexite +++++++++++++
                 //Sommet temp = Sommet(copie.location, copie.status, )
-                
+
                 aTraiter.push(copie);
+                voisins.push_back(copie);
             }
         }
-        Sommet s = Sommet(r.location, r.status, voisins);
+        Sommet s = Sommet(r, voisins);
         map.insert(std::pair<RR::Location, Sommet>(r.location, s));
     }
 }
-
 
 /*entrées:
 - R robot
