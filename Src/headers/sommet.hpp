@@ -1,18 +1,18 @@
 #ifndef SOMMET_HPP_
 #define SOMMET_HPP_
 #include <iostream>
+#include <map>
 #include <vector>
 
-#include "sommet.hpp"
 #include "board.hpp"
 
 class Sommet
 {
 public:
-    RR::Robot robot;
-    std::vector<RR::Robot> voisin;
+    RR::Robot position;
+    std::vector<RR::Robot> voisins;
 
-    Sommet(RR::Robot, std::vector<RR::Robot>);
+    Sommet(RR::Robot r, std::vector<RR::Robot> sommets);
 
 private:
 };

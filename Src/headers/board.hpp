@@ -62,6 +62,8 @@ struct Robot {
   Status status ;
 } ;
 
+bool operator<(const Robot& r1, const Robot& r2);
+
 /* Board */
 
 struct Board {

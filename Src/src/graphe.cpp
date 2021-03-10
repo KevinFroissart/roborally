@@ -1,69 +1,64 @@
 #include <queue>
 
 #include "../headers/graphe.hpp"
-#include "../headers/board.hpp"
 
 using namespace std;
 
 /**
  * Constructeur par défaut avec une liste vide
  */
-Graphe::Graphe()
-{
-    map = std::map<RR::Location, Sommet>();
+Graphe::Graphe() {
+    map = std::map<RR::Robot, Sommet>();
 }
 
 /**
  * Construit un graphe a partir d'un robot et d'un plateau
  */
-Graphe::Graphe(RR::Robot r, RR::Board b)
-{
-    std::queue<RR::Robot> aTraiter;
-    aTraiter.push(r);
+Graphe::Graphe(RR::Board b) {
+    RR::Robot r;
+    // itere sur toutes les cases
+    for(std::pair<RR::Location, RR::Board::TileType> tile : b.tiles) {
+        r.location.column = tile.first.column;
+        r.location.line = tile.first.line;
 
-    //RR::Robot r();
-    while (!aTraiter.empty())
-    {
+        for(RR::Robot::Status dir : directions) {        
+            //pour chaque direction, faire jouer le robot
+            r.status = dir;
+            std::vector<RR::Robot> voisins;
+            for(RR::Robot::Move move : moves) {
+                b.play(r, move);
+                if (r.status != RR::Robot::Status::DEAD) {
+                    //ajoute la position a la liste des voisins
+                    voisins.push_back(r);
+                }
+            }
+            Sommet s(r, voisins); //construit le sommet a inserer
+            map.insert(std::pair<RR::Robot, Sommet>(r, s));
+        }
+    }
+
+    /*while(!aTraiter.empty()) {
         r = aTraiter.front();
         aTraiter.pop();
         std::vector<RR::Robot> voisins;
 
         //pour chaque direction, faire jouer le robot
-        for (RR::Robot::Move move : moves)
-        {
+        for(RR::Robot::Move move : moves) {
+            vector<RR::Robot> voisins;
+
             RR::Robot copie = r;
             b.play(copie, move);
-            if (copie.status != RR::Robot::Status::DEAD)
-            {
-                // ajouter la cible à la liste des voisins
-                //TODO modifier la liste de voisins? Si les voisins sont des sommets on passe sur du recursif,
-                // complexite +++++++++++++
-                //Sommet temp = Sommet(copie.location, copie.status, )
-
-                aTraiter.push(copie);
+            if (copie.status != RR::Robot::Status::DEAD) {
+                //ajoute la position a la liste des voisins
                 voisins.push_back(copie);
+                aTraiter.push(copie);
             }
         }
-        Sommet s = Sommet(r, voisins);
-        map.insert(std::pair<RR::Location, Sommet>(r.location, s));
-    }
+
+        Sommet s(r, voisins); //construit le sommet a inserer
+        map.insert(std::pair<RR::Robot, Sommet>(r, s));
+    }*/
 }
 
-/*entrées:
-- R robot
-- J jeu
-structures:
-- G graphe
-- P pile
-variables:
-- C robot
-algo:
-- P <- R
-- tant que P non vide:
-  - P -> R
-  - G <- sommet R
-  - pour chaque direction D:
-    - C <- clone de R
-    - J.play(C, D)
-    - P <- C
-    - G <- arrête (R, D, C)*/
+/* -- TENTER D'IMPLEMENTER AVEC CETTE BOUCLE AU LIEU DU PARCOURS --
+*/

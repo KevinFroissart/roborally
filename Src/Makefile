@@ -36,10 +36,10 @@ CLEAN_OBJECTS += $(TEST_BOARD_OBJECTS)
 APP_SOURCES = src/app.cpp
 APP_OBJECTS = $(foreach source, $(APP_SOURCES), obj/$(patsubst src/%.cpp,%.o,$(source)))
 
-app : $(APP_OBJECTS) $(OBJECTS) $(HEADERS)
+bin/app : $(APP_OBJECTS) $(OBJECTS) $(HEADERS)
 	$(CXX) -pthread $(APP_OBJECTS) $(OBJECTS) -o $@ $(LDFLAGS)
 	
-$(APP_OBJECTS): APP_SOURCES
+$(APP_OBJECTS): $(APP_SOURCES)
 	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@
 
 all : bin/app
