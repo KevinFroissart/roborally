@@ -9,8 +9,10 @@
 class Sommet
 {
 public:
-    RR::Robot position;
+    RR::Robot robot;
     std::vector<RR::Robot> voisins;
+    bool visite;
+    int parcours;
 
     Sommet(RR::Robot r, std::vector<RR::Robot> sommets);
 
