@@ -8,7 +8,7 @@
 class Dijkstra
 {
 public:
-    void parcours(Graphe graphe, Sommet start);
+    void parcours(Graphe graphe, Sommet start, std::priority_queue<Sommet> pq);
 
 private:
 };
