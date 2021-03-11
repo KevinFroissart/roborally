@@ -2,15 +2,19 @@ CXX      = g++
 
 .DEFAULT_GOAL := all
 
-SOURCES = 
-SOURCES += src/board.cpp src/sommet.cpp src/graphe.cpp
+SRC = src/
+OBJ = obj/
+BIN = bin/
 
-OBJECTS = $(foreach source, $(SOURCES), obj/$(patsubst src/%.cpp,%.o,$(source)))
+SOURCES = 
+SOURCES += $(SRC)board.cpp $(SRC)sommet.cpp $(SRC)graphe.cpp
+
+OBJECTS = $(foreach source, $(SOURCES), $(OBJ)$(patsubst $(SRC)%.cpp,%.o,$(source)))
 
 CXXFLAGS += -g -Wall -pedantic
 LDFLAGS +=
 
-obj/%.o: src/%.cpp
+$(OBJ)%.o: $(SRC)%.cpp
 	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@
 
 CLEAN_OBJECTS = $(OBJECTS)
@@ -18,32 +22,32 @@ TARGETS =
 
 ########## test_board ##########
 
-TEST_BOARD_SOURCES = src/test_board.cpp
-TEST_BOARD_OBJECTS = $(foreach source, $(TEST_BOARD_SOURCES), obj/$(patsubst src/%.cpp,%.o,$(source)))
+TEST_BOARD_SOURCES = $(SRC)test_board.cpp
+TEST_BOARD_OBJECTS = $(foreach source, $(TEST_BOARD_SOURCES), $(OBJ)$(patsubst $(SRC)%.cpp,%.o,$(source)))
 
-bin/test_board : $(TEST_BOARD_OBJECTS) $(OBJECTS) $(HEADERS)
+$(BIN)test_board : $(TEST_BOARD_OBJECTS) $(OBJECTS) $(HEADERS)
 	$(CXX) $(TEST_BOARD_OBJECTS) $(OBJECTS) -o $@ $(LDFLAGS)
 	
 $(TEST_BOARD_OBJECTS): $(TEST_BOARD_SOURCES)
 	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@
 
-all : bin/test_board
-TARGETS += bin/test_board
+all : $(BIN)test_board
+TARGETS += $(BIN)test_board
 CLEAN_OBJECTS += $(TEST_BOARD_OBJECTS)
 
 ########## app ##########
 
-APP_SOURCES = src/app.cpp
-APP_OBJECTS = $(foreach source, $(APP_SOURCES), obj/$(patsubst src/%.cpp,%.o,$(source)))
+APP_SOURCES = $(SRC)app.cpp
+APP_OBJECTS = $(foreach source, $(APP_SOURCES), $(OBJ)$(patsubst $(SRC)%.cpp,%.o,$(source)))
 
-bin/app : $(APP_OBJECTS) $(OBJECTS) $(HEADERS)
+$(BIN)app : $(APP_OBJECTS) $(OBJECTS) $(HEADERS)
 	$(CXX) -pthread $(APP_OBJECTS) $(OBJECTS) -o $@ $(LDFLAGS)
 	
 $(APP_OBJECTS): $(APP_SOURCES)
 	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@
 
-all : bin/app
-TARGETS += bin/app
+all : $(BIN)app
+TARGETS += $(BIN)app
 CLEAN_OBJECTS += $(APP_OBJECTS)
 
 ########## cleanup ##########
