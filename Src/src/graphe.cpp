@@ -36,29 +36,54 @@ Graphe::Graphe(RR::Board b) {
             map.insert(std::pair<RR::Robot, Sommet>(r, s));
         }
     }
-
-    /*while(!aTraiter.empty()) {
-        r = aTraiter.front();
-        aTraiter.pop();
-        std::vector<RR::Robot> voisins;
-
-        //pour chaque direction, faire jouer le robot
-        for(RR::Robot::Move move : moves) {
-            vector<RR::Robot> voisins;
-
-            RR::Robot copie = r;
-            b.play(copie, move);
-            if (copie.status != RR::Robot::Status::DEAD) {
-                //ajoute la position a la liste des voisins
-                voisins.push_back(copie);
-                aTraiter.push(copie);
-            }
-        }
-
-        Sommet s(r, voisins); //construit le sommet a inserer
-        map.insert(std::pair<RR::Robot, Sommet>(r, s));
-    }*/
 }
 
-/* -- TENTER D'IMPLEMENTER AVEC CETTE BOUCLE AU LIEU DU PARCOURS --
-*/
+bool operator<(const Sommet &s1, const Sommet &s2)
+{
+    return s1.parcours < s2.parcours;
+}
+
+void Graphe::parcours(Sommet start)
+{
+    std::priority_queue<Sommet> pq;
+    Sommet courant = start;
+    
+    //initialiser tous les sommets a nullptr, +infini
+    //initialiser le sommet de depart a lui-même, 0
+    for (std::pair<const RR::Robot, Sommet> elem : map) {
+        elem.second.parcours = INT16_MAX;
+        elem.second.parent = nullptr;
+    }
+
+    courant.parcours = 0;
+    courant.parent = nullptr;
+
+    pq.push(start);
+    while (pq.size() != 0)
+    {
+        courant = pq.top(); //courant -> elt de la file avec prio minimale
+        pq.pop();
+        for (RR::Robot robot : courant.voisins)
+        {
+            //le poids de l'arrete c'est le nombre de sauts necessaires pour aller du point courant 
+            //a son voisin. Toujours 1 ici
+            //peut-être faire la conversion robot->sommet ici
+            Sommet s = start;
+            std::map<RR::Robot, Sommet>::iterator itr;
+            if ((itr = map.find(robot)) != map.end())
+                s = itr->second;
+            else
+                break;
+            if (s.parcours > courant.parcours + 1)
+            {
+                s.visite = true;
+                s.parent = &courant;
+                s.parcours = courant.parcours + 1;
+                pq.push(s);
+            }
+            // recherche dans une map ? Clé : un robot Value: le sommet
+        }
+    }
+    //courant = chemin le plus cours (normalement inchallah)
+    //on utilise pas graphe ? à voir pk et où est le pb
+}

@@ -13,6 +13,8 @@ public:
     Graphe(RR::Board b);
     std::string ToString();
     std::map<RR::Robot, Sommet> map;
+    void parcours(Sommet start);
+
 private:
 
     const std::array<RR::Robot::Move, 7> moves = {
@@ -32,5 +34,7 @@ private:
         RR::Robot::Status::SOUTH,
     };
 };
+
+bool operator<(const Sommet &s1, const Sommet &s2);
 
 #endif

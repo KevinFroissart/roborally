@@ -4,4 +4,5 @@ Sommet::Sommet(RR::Robot r, std::vector<RR::Robot> sommets) : robot(r), voisins(
 {
     visite = false;
     parcours = 0;
+    parent = nullptr;
 }
