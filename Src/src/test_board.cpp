@@ -2,6 +2,15 @@
 #include "../headers/graphe.hpp"
 
 #include <iostream>
+#include <string>
+
+std::string get_status(RR::Robot::Status s)
+{
+  return s == RR::Robot::Status::EAST    ? "EAST"
+         : s == RR::Robot::Status::NORTH ? "NORTH"
+         : s == RR::Robot::Status::WEST  ? "WEST"
+                                         : "SOUTH";
+}
 
 int main()
 {
@@ -10,16 +19,16 @@ int main()
 
   Graphe g(b);
 
-  std::cout << "Nombre de sommets: " << g.map.size() << std::endl;
-
-  for(std::pair<RR::Robot, Sommet> sommet : g.map) {
-    std::cout << sommet.first.location.column 
-      << " " << sommet.first.location.line  
-      << " voisins: ";
-      for (RR::Robot r : sommet.second.voisins) {
-        std::cout << r.location.line
-        << " " << r.location.column << std::endl ;
-      }
+  std::cout << "ENTITY : Line:Column - STATUS" << std::endl;
+  std::map<RR::Robot, Sommet>::iterator itr = g.map.begin();
+  while (itr != g.map.end())
+  {
+    std::cout << "Sommet : " << itr->first.location.line << ":" << itr->first.location.column << " - " << get_status(itr->first.status) << std::endl;
+    for (std::vector<RR::Robot>::iterator it = itr->second.voisins.begin(); it != itr->second.voisins.end(); ++it)
+    {
+      std::cout << "   Voisins : " << it->location.line << ":" << it->location.column << " - " << get_status(it->status) << std::endl;
+    }
+    itr++;
   }
 
   return 0;
