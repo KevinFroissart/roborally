@@ -1,4 +1,5 @@
 #include <queue>
+#include <set>
 
 #include "../headers/graphe.hpp"
 
@@ -20,10 +21,13 @@ Graphe::Graphe(RR::Board b) {
     for(std::pair<RR::Location, RR::Board::TileType> tile : b.tiles) {
         r.location.column = tile.first.column;
         r.location.line = tile.first.line;
+        //std::cout << "iterating on position " << r.location.column 
+        //<< " " << r.location.line << " ";
 
         for(RR::Robot::Status dir : directions) {        
             //pour chaque direction, faire jouer le robot
             r.status = dir;
+            //std::cout << r.StatusToString() << std::endl;
             std::vector<RR::Robot> voisins;
             for(RR::Robot::Move move : moves) {
                 b.play(r, move);
@@ -45,6 +49,7 @@ bool operator<(const Sommet &s1, const Sommet &s2)
 
 void Graphe::parcours(Sommet start)
 {
+    //std::multiset<Sommet> pq;
     std::priority_queue<Sommet> pq;
     Sommet courant = start;
     

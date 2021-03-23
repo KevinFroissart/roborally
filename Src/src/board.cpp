@@ -176,13 +176,35 @@ static Rotation tile_rotation(
 
 /**** Robot ****/
 
-/** Comparison for the map **/
+/** Comparison for the map */
 bool operator<(const Robot& r1, const Robot& r2) {
-  bool position = r1.location.column <= r2.location.column 
-            && r1.location.line <= r2.location.line; 
-  
-  bool rotation = r1.status < r2.status;
-  return rotation && position;
+  if (r1.location.line < r2.location.line) {
+    return true;
+  } else if (r1.location.line == r2.location.line && r1.location.column < r2.location.column) {
+    return true;
+  } else if (r1.location.line == r2.location.line && r1.location.column == r2.location.column && r1.status < r2.status) {
+    return true;
+  }
+
+  return false;
+}
+
+/** String format for status */
+std::string Robot::StatusToString() {
+  std::string ret;
+  switch (status) {
+    case RR::Robot::Status::EAST: ret = "East"; 
+         break;
+    case RR::Robot::Status::NORTH: ret = "North"; 
+         break;
+    case RR::Robot::Status::WEST: ret = "West"; 
+         break;
+    case RR::Robot::Status::SOUTH: ret = "South"; 
+         break;
+    case RR::Robot::Status::DEAD: ret = "Dead"; 
+         break;
+  }
+  return ret;
 }
 
 /** Moving **/

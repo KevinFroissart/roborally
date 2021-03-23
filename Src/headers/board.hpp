@@ -60,6 +60,8 @@ struct Robot {
 
   Location location ;
   Status status ;
+
+  std::string StatusToString();
 } ;
 
 bool operator<(const Robot& r1, const Robot& r2);

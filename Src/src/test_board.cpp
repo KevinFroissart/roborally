@@ -10,6 +10,8 @@ int main()
 
   Graphe g(b);
 
+  std::cout << "Nombre de sommets: " << g.map.size() << std::endl;
+
   for(std::pair<RR::Robot, Sommet> sommet : g.map) {
     std::cout << sommet.first.location.column 
       << " " << sommet.first.location.line  
