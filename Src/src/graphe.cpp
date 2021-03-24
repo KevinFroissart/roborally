@@ -1,6 +1,4 @@
-#include <queue>
 #include <set>
-
 #include "../headers/graphe.hpp"
 
 using namespace std;
@@ -49,15 +47,18 @@ Graphe::Graphe(RR::Board board)
     }
 }
 
-bool operator<(const Sommet &s1, const Sommet &s2)
+struct compare
 {
-    return s1.parcours < s2.parcours;
-}
+    bool operator()(const Sommet &s1, const Sommet &s2) const
+    {
+        return s1.parcours < s2.parcours;
+    }
+};
 
 void Graphe::parcours(Sommet start)
 {
     //std::multiset<Sommet> pq;
-    std::priority_queue<Sommet> pq;
+    std::multiset<Sommet, compare> mset;
     Sommet courant = start;
 
     //initialiser tous les sommets a nullptr, +infini
@@ -71,19 +72,20 @@ void Graphe::parcours(Sommet start)
     courant.parcours = 0;
     courant.parent = nullptr;
 
-    pq.push(start);
-    while (pq.size() != 0)
+    mset.insert(start);
+    while (mset.size() != 0)
     {
-        courant = pq.top(); //courant -> elt de la file avec prio minimale
-        pq.pop();
+        multiset<Sommet, compare>::iterator itr_ms = mset.begin();
+        courant = *itr_ms; //courant -> elt de la file avec prio minimale
+        mset.erase(itr_ms);
         for (RR::Robot robot : courant.voisins)
         {
             //le poids de l'arrete c'est le nombre de sauts necessaires pour aller du point courant
             //a son voisin. Toujours 1 ici
             Sommet sommet = start;
-            std::map<RR::Robot, Sommet>::iterator itr;
-            if ((itr = map.find(robot)) != map.end())
-                sommet = itr->second;
+            std::map<RR::Robot, Sommet>::iterator itr_map;
+            if ((itr_map = map.find(robot)) != map.end())
+                sommet = itr_map->second;
             else
                 break; // à modifier
             if (sommet.parcours > courant.parcours + 1)
@@ -91,7 +93,7 @@ void Graphe::parcours(Sommet start)
                 sommet.visite = true;
                 sommet.parent = &courant;
                 sommet.parcours = courant.parcours + 1;
-                pq.push(sommet);
+                mset.insert(sommet);
             }
         }
     }
