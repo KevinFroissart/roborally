@@ -18,7 +18,9 @@ int main()
   b.save("/tmp/cpy.txt");
 
   Graphe g(b);
-  g.parcours(g.map.begin()->second);
+  std::map<RR::Robot, Sommet>::iterator itr_map = g.map.begin();
+  g.parcours(itr_map->second);
+
   /*int nb = 0;
   std::cout << "ENTITY : Line:Column - STATUS" << std::endl;
   std::map<RR::Robot, Sommet>::iterator itr = g.map.begin();
