@@ -16,7 +16,6 @@ public:
     void parcours(Sommet start);
 
 private:
-
     const std::array<RR::Robot::Move, 7> moves = {
         RR::Robot::Move::FORWARD_1,
         RR::Robot::Move::FORWARD_2,
@@ -24,8 +23,7 @@ private:
         RR::Robot::Move::BACKWARD_1,
         RR::Robot::Move::TURN_LEFT,
         RR::Robot::Move::TURN_RIGHT,
-        RR::Robot::Move::U_TURN
-    };
+        RR::Robot::Move::U_TURN};
 
     const std::array<RR::Robot::Status, 4> directions = {
         RR::Robot::Status::EAST,

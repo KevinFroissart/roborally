@@ -3,6 +3,6 @@
 Sommet::Sommet(RR::Robot r, std::vector<RR::Robot> sommets) : robot(r), voisins(sommets)
 {
     visite = false;
-    parcours = 0;
+    parcours = INT16_MAX;
     parent = nullptr;
 }

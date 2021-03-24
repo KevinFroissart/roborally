@@ -18,11 +18,13 @@ int main()
   b.save("/tmp/cpy.txt");
 
   Graphe g(b);
-
+  g.parcours(g.map.begin()->second);
+  /*int nb = 0;
   std::cout << "ENTITY : Line:Column - STATUS" << std::endl;
   std::map<RR::Robot, Sommet>::iterator itr = g.map.begin();
   while (itr != g.map.end())
   {
+    nb++;
     std::cout << "Sommet : " << itr->first.location.line << ":" << itr->first.location.column << " - " << get_status(itr->first.status) << std::endl;
     for (std::vector<RR::Robot>::iterator it = itr->second.voisins.begin(); it != itr->second.voisins.end(); ++it)
     {
@@ -30,6 +32,6 @@ int main()
     }
     itr++;
   }
-
+  std::cout << nb << std::endl;*/
   return 0;
 }
