@@ -14,6 +14,7 @@ public:
     std::string ToString();
     std::map<RR::Robot, Sommet> map;
     void parcours(Sommet start);
+    std::string plus_court_chemin(Sommet *target);
 
 private:
     const std::array<RR::Robot::Move, 7> moves = {

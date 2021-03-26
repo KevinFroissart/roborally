@@ -109,14 +109,25 @@ void Graphe::parcours(Sommet start)
         }
         mset.erase(mset.begin());
     }
-    std::cout << "\n\n CHEMIN LE PLUS COURS" << std::endl;
-    /*Sommet test = courant;
-    int i = 0;
-    while (test.parent != nullptr && i < 20)
+}
+
+string Graphe::plus_court_chemin(Sommet *target)
+{
+    std::string res = "";
+    Sommet *tmpt = target;
+    while (tmpt->parent != nullptr)
     {
-        std::cout << "Sommet : " << test.robot.location.line << ":" << test.robot.location.column << " - " << getstatus(test.robot.status) << " - " << test.parcours << std::endl;
-        std::cout << "Parent : " << test.parent->robot.location.line << ":" << test.parent->robot.location.column << " - " << getstatus(test.parent->robot.status) << " - " << test.parent->parcours << std::endl;
-        test = *test.parent;
-        i++;
-    }*/
+        std::string tmp = "Sommet: " +
+                          std::to_string(tmpt->robot.location.line) + ":" +
+                          std::to_string(tmpt->robot.location.column) + " - " +
+                          getstatus(tmpt->robot.status) + " - " +
+                          std::to_string(tmpt->parcours) + "\n";
+        res = tmp + res;
+
+        //std::cout << tmp << std::endl;
+        tmpt = tmpt->parent;
+    }
+    std::cout << "\n\n CHEMIN LE PLUS COURT" << std::endl;
+    std::cout << res << std::endl;
+    return res;
 }
