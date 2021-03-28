@@ -178,23 +178,27 @@ namespace RR
 
   /**** Robot ****/
 
-  /** Comparison for the map */
-  bool operator<(const Robot &r1, const Robot &r2)
-  {
-    if (r1.location.line < r2.location.line)
-    {
-      return true;
-    }
-    else if (r1.location.line == r2.location.line && r1.location.column < r2.location.column)
-    {
-      return true;
-    }
-    else if (r1.location.line == r2.location.line && r1.location.column == r2.location.column && r1.status < r2.status)
-    {
-      return true;
-    }
+  std::size_t RobotHash::operator()(const Robot& r) const {
+    //create a bitset to pack line column and orientation
+    std::bitset<16*sizeof(int) + 8*sizeof(Robot::Status)> concat ;
+    //pack the line
+    concat |= r.location.line ;
+    concat <<= 8*sizeof(int) ;
+    //pack the colum,
+    concat |= r.location.column ;
+    concat <<= 8*sizeof(Robot::Status) ;
+    //pack the orientation
+    concat |= +r.status ;
+    //hash the bitset using the standard implementation on bitsets
+    return std::hash< std::bitset<16*sizeof(int) + 8*sizeof(Robot::Status)> >()(concat) ;
+  }
 
-    return false;
+  bool operator!=(const Robot& r1, const Robot& r2) {
+    return !(r1.location == r2.location) && r1.status != r2.status;
+  }
+
+   bool operator==(const Robot& r1, const Robot& r2) {
+    return r1.location == r2.location && r1.status == r2.status;
   }
 
   /** String format for status */

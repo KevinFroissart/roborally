@@ -64,7 +64,12 @@ struct Robot {
   std::string StatusToString();
 } ;
 
-bool operator<(const Robot& r1, const Robot& r2);
+bool operator!=(const Robot& r1, const Robot& r2);
+bool operator==(const Robot& r1, const Robot& r2);
+
+struct RobotHash {
+  std::size_t operator()(const Robot& r) const ;
+};
 
 /* Board */
 

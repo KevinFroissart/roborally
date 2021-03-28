@@ -12,9 +12,9 @@ public:
     Graphe();
     Graphe(RR::Board b);
     std::string ToString();
-    std::map<RR::Robot, Sommet> map;
-    void parcours(Sommet start);
-    std::string plus_court_chemin(Sommet *target);
+    std::unordered_map<RR::Robot, Sommet, RR::RobotHash> map;
+    void parcours(RR::Robot start, RR::Robot end);
+    //std::string plus_court_chemin(RR::Robot target);
 
 private:
     const std::array<RR::Robot::Move, 7> moves = {
@@ -35,5 +35,12 @@ private:
 };
 
 bool operator<(const Sommet &s1, const Sommet &s2);
+
+struct PQitem {
+    int distance;
+    RR::Robot pos;
+
+    PQitem(int distance, RR::Robot pos);
+};
 
 #endif
