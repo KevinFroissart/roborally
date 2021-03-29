@@ -33,10 +33,17 @@ Graphe::Graphe(RR::Board board)
             {
                 RR::Robot copie = robot;
                 board.play(copie, move);
+
                 if (copie.status != RR::Robot::Status::DEAD)
                 {
                     //ajoute la position a la liste des voisins
+                    copie.move = move;
+
                     voisins.push_back(copie);
+                    if (copie.location.line == 2 && copie.location.column == 3)
+                    {
+                        std::cout << copie.MovesToString() << " - " << copie.StatusToString() << std::endl;
+                    }
                 }
             }
             Sommet sommet(robot, voisins); //construit le sommet a inserer
@@ -105,11 +112,20 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
     std::string parcours = "Arrivée";
     while (r != start)
     {
-        parcours = "Sommet " + std::to_string(poids[r]) + ": " + std::to_string(r.location.line) + ":" + std::to_string(r.location.column) + " - " + r.StatusToString() + "\n" + parcours;
+        parcours = "Sommet " + std::to_string(poids[r]) + ": " +
+                   std::to_string(r.location.line) + ":" +
+                   std::to_string(r.location.column) + " - " +
+                   r.StatusToString() + " - " +
+                   r.MovesToString() + "\n" + parcours;
 
         chemin.push_back(pred[r]);
         r = pred[r];
     }
+    parcours = "Sommet " + std::to_string(poids[start]) + ": " +
+               std::to_string(start.location.line) + ":" +
+               std::to_string(start.location.column) + " - " +
+               start.StatusToString() + " - " +
+               start.MovesToString() + "\n" + parcours;
 
     parcours = "Départ\n" + parcours;
 

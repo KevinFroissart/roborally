@@ -229,6 +229,37 @@ namespace RR
     return ret;
   }
 
+  /** String format for moves */
+  std::string Robot::MovesToString()
+  {
+    std::string ret;
+    switch (move)
+    {
+    case RR::Robot::Move::BACKWARD_1:
+      ret = "1 pas en arrière";
+      break;
+    case RR::Robot::Move::FORWARD_1:
+      ret = "1 pas en avant";
+      break;
+    case RR::Robot::Move::FORWARD_2:
+      ret = "2 pas en avant";
+      break;
+    case RR::Robot::Move::FORWARD_3:
+      ret = "3 pas en avant";
+      break;
+    case RR::Robot::Move::TURN_LEFT:
+      ret = "tourne à gauche";
+      break;
+    case RR::Robot::Move::TURN_RIGHT:
+      ret = "tourne à droite";
+      break;
+    case RR::Robot::Move::U_TURN:
+      ret = "demi-tour";
+      break;
+    }
+    return ret;
+  }
+
   /** Moving **/
 
   /* move the robot in a direction */

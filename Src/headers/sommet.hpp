@@ -12,6 +12,7 @@ public:
     RR::Robot robot;
     std::vector<RR::Robot> voisins;
     bool visite;
+    //RR::Robot::Move move;
 
     Sommet();
     Sommet(RR::Robot r, std::vector<RR::Robot> sommets);
