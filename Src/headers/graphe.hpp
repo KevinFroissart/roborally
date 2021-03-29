@@ -13,7 +13,7 @@ public:
     Graphe(RR::Board b);
     std::string ToString();
     std::map<RR::Robot, Sommet> map;
-    void parcours(Sommet start);
+    void parcours(Sommet start, Sommet *targer);
     std::string plus_court_chemin(Sommet *target);
 
 private:

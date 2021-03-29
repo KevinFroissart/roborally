@@ -63,45 +63,46 @@ struct compare
     }
 };
 
-void Graphe::parcours(Sommet start)
+void Graphe::parcours(Sommet start, Sommet *target)
 {
     std::multiset<Sommet, compare> mset;
-    Sommet courant = start;
 
-    courant.parcours = 0;
-    courant.parent = nullptr;
+    start.parcours = 0;
+    start.parent = nullptr;
 
-    mset.insert(courant);
+    mset.insert(start);
     while (mset.size() != 0)
     {
 
-        multiset<Sommet, compare>::iterator itr_ms = mset.begin();
-        courant = *itr_ms; //courant -> elt de la file avec prio minimale
+        Sommet courant = *mset.begin();
+
+        //tests
         multiset<Sommet, less<int>>::iterator itr_test;
-        cout << "\n\n\nNOUVEAU PARCOURS - " << mset.size();
+        cout << "\n\n\nNOUVEAU PARCOURS - " << mset.size() << std::endl;
         for (itr_test = mset.begin(); itr_test != mset.end(); ++itr_test)
         {
-            cout << "\nSommet : " << itr_test->robot.location.line << ":" << itr_test->robot.location.column << " - " << getstatus(itr_test->robot.status) << " - " << itr_test->parcours;
+            cout << "Sommet : " << itr_test->robot.location.line << ":" << itr_test->robot.location.column << " - " << getstatus(itr_test->robot.status) << " - " << itr_test->parcours << " - S" << &itr_test << " - P" << &itr_test->parent << std::endl;
         }
-        //std::cout << courant.voisins.size() << std::endl;
+
         for (RR::Robot robot : courant.voisins)
         {
-            //le poids de l'arrete c'est le nombre de sauts necessaires pour aller du point courant
-            //a son voisin. Toujours 1 ici
             Sommet sommet = start;
+            //std::cout << &sommet << std::endl;
             std::map<RR::Robot, Sommet>::iterator itr_map;
             if ((itr_map = map.find(robot)) != map.end())
                 sommet = itr_map->second;
             else
                 break;
-
+            //std::cout << &sommet << std::endl;
             if (sommet.parcours > courant.parcours + 1 && sommet.visite == false)
             {
                 sommet.visite = true;
+                std::cout << &courant;
                 sommet.parent = &courant;
+                std::cout << sommet.parent << std::endl;
                 sommet.parcours = courant.parcours + 1;
-                std::cout << "\nParent : " << courant.robot.location.line << ":" << courant.robot.location.column << " - " << getstatus(courant.robot.status) << " - " << courant.parcours << std::endl;
-                std::cout << "Sommet : " << sommet.robot.location.line << ":" << sommet.robot.location.column << " - " << getstatus(sommet.robot.status) << " - " << sommet.parcours << std::endl;
+                //std::cout << "\nParent : " << courant.robot.location.line << ":" << courant.robot.location.column << " - " << getstatus(courant.robot.status) << " - " << courant.parcours << std::endl;
+                //std::cout << "Sommet : " << sommet.robot.location.line << ":" << sommet.robot.location.column << " - " << getstatus(sommet.robot.status) << " - " << sommet.parcours << std::endl;
                 mset.insert(sommet);
                 map.erase(itr_map);
                 map.insert(std::pair<RR::Robot, Sommet>(robot, sommet));
@@ -109,6 +110,23 @@ void Graphe::parcours(Sommet start)
         }
         mset.erase(mset.begin());
     }
+
+    /*std::string res = "";
+    Sommet *tmpt = target;
+    while (tmpt->parent != nullptr)
+    {
+        std::string tmp = "Sommet: " +
+                          std::to_string(tmpt->robot.location.line) + ":" +
+                          std::to_string(tmpt->robot.location.column) + " - " +
+                          getstatus(tmpt->robot.status) + " - " +
+                          std::to_string(tmpt->parcours) + "\n";
+        res = tmp + res;
+
+        std::cout << tmp;
+        tmpt = tmpt->parent;
+    }
+    std::cout << "\n\n CHEMIN LE PLUS COURT" << std::endl;
+    std::cout << res << std::endl;*/
 }
 
 string Graphe::plus_court_chemin(Sommet *target)
