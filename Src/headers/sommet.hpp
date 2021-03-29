@@ -12,9 +12,8 @@ public:
     RR::Robot robot;
     std::vector<RR::Robot> voisins;
     bool visite;
-    int parcours;
-    Sommet *parent;
 
+    Sommet();
     Sommet(RR::Robot r, std::vector<RR::Robot> sommets);
 
 private:

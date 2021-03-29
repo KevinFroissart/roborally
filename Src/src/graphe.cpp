@@ -1,3 +1,4 @@
+#include <queue>
 #include <set>
 #include "../headers/graphe.hpp"
 
@@ -8,15 +9,7 @@ using namespace std;
  */
 Graphe::Graphe()
 {
-    map = std::map<RR::Robot, Sommet>();
-}
-
-std::string getstatus(RR::Robot::Status s)
-{
-    return s == RR::Robot::Status::EAST    ? "EAST"
-           : s == RR::Robot::Status::NORTH ? "NORTH"
-           : s == RR::Robot::Status::WEST  ? "WEST"
-                                           : "SOUTH";
+    map = std::unordered_map<RR::Robot, Sommet, RR::RobotHash>();
 }
 
 /**
@@ -30,14 +23,11 @@ Graphe::Graphe(RR::Board board)
     {
         robot.location.line = tile.first.line;
         robot.location.column = tile.first.column;
-        //std::cout << "iterating on position " << r.location.column
-        //<< " " << r.location.line << " ";
 
         for (RR::Robot::Status direction : directions)
         {
             //pour chaque direction, faire jouer le robot
             robot.status = direction;
-            //std::cout << r.StatusToString() << std::endl;
             std::vector<RR::Robot> voisins;
             for (RR::Robot::Move move : moves)
             {
@@ -55,97 +45,79 @@ Graphe::Graphe(RR::Board board)
     }
 }
 
-struct compare
+bool operator<(const PQitem &s1, const PQitem &s2)
 {
-    bool operator()(const Sommet &s1, const Sommet &s2) const
-    {
-        return s1.parcours < s2.parcours;
-    }
-};
-
-void Graphe::parcours(Sommet start, Sommet *target)
-{
-    std::multiset<Sommet, compare> mset;
-
-    start.parcours = 0;
-    start.parent = nullptr;
-
-    mset.insert(start);
-    while (mset.size() != 0)
-    {
-
-        Sommet courant = *mset.begin();
-
-        //tests
-        multiset<Sommet, less<int>>::iterator itr_test;
-        cout << "\n\n\nNOUVEAU PARCOURS - " << mset.size() << std::endl;
-        for (itr_test = mset.begin(); itr_test != mset.end(); ++itr_test)
-        {
-            cout << "Sommet : " << itr_test->robot.location.line << ":" << itr_test->robot.location.column << " - " << getstatus(itr_test->robot.status) << " - " << itr_test->parcours << " - S" << &itr_test << " - P" << &itr_test->parent << std::endl;
-        }
-
-        for (RR::Robot robot : courant.voisins)
-        {
-            Sommet sommet = start;
-            //std::cout << &sommet << std::endl;
-            std::map<RR::Robot, Sommet>::iterator itr_map;
-            if ((itr_map = map.find(robot)) != map.end())
-                sommet = itr_map->second;
-            else
-                break;
-            //std::cout << &sommet << std::endl;
-            if (sommet.parcours > courant.parcours + 1 && sommet.visite == false)
-            {
-                sommet.visite = true;
-                std::cout << &courant;
-                sommet.parent = &courant;
-                std::cout << sommet.parent << std::endl;
-                sommet.parcours = courant.parcours + 1;
-                //std::cout << "\nParent : " << courant.robot.location.line << ":" << courant.robot.location.column << " - " << getstatus(courant.robot.status) << " - " << courant.parcours << std::endl;
-                //std::cout << "Sommet : " << sommet.robot.location.line << ":" << sommet.robot.location.column << " - " << getstatus(sommet.robot.status) << " - " << sommet.parcours << std::endl;
-                mset.insert(sommet);
-                map.erase(itr_map);
-                map.insert(std::pair<RR::Robot, Sommet>(robot, sommet));
-            }
-        }
-        mset.erase(mset.begin());
-    }
-
-    /*std::string res = "";
-    Sommet *tmpt = target;
-    while (tmpt->parent != nullptr)
-    {
-        std::string tmp = "Sommet: " +
-                          std::to_string(tmpt->robot.location.line) + ":" +
-                          std::to_string(tmpt->robot.location.column) + " - " +
-                          getstatus(tmpt->robot.status) + " - " +
-                          std::to_string(tmpt->parcours) + "\n";
-        res = tmp + res;
-
-        std::cout << tmp;
-        tmpt = tmpt->parent;
-    }
-    std::cout << "\n\n CHEMIN LE PLUS COURT" << std::endl;
-    std::cout << res << std::endl;*/
+    return s1.distance < s2.distance;
 }
 
-string Graphe::plus_court_chemin(Sommet *target)
+PQitem::PQitem(int distance, RR::Robot robot)
 {
-    std::string res = "";
-    Sommet *tmpt = target;
-    while (tmpt->parent != nullptr)
-    {
-        std::string tmp = "Sommet: " +
-                          std::to_string(tmpt->robot.location.line) + ":" +
-                          std::to_string(tmpt->robot.location.column) + " - " +
-                          getstatus(tmpt->robot.status) + " - " +
-                          std::to_string(tmpt->parcours) + "\n";
-        res = tmp + res;
+    this->distance = distance;
+    this->robot = robot;
+}
 
-        //std::cout << tmp << std::endl;
-        tmpt = tmpt->parent;
+void Graphe::parcours(RR::Robot start, RR::Robot end)
+{
+    std::priority_queue<PQitem> pq;
+    std::unordered_map<RR::Robot, int, RR::RobotHash> poids;
+    std::unordered_map<RR::Robot, RR::Robot, RR::RobotHash> pred;
+    //std::set<RR::Robot> visites; idee pour checker les sommets deja visites
+
+    //initialize weights
+    for (std::pair<const RR::Robot, Sommet> sommet : map)
+    {
+        poids[sommet.first] = INT16_MAX;
     }
-    std::cout << "\n\n CHEMIN LE PLUS COURT" << std::endl;
-    std::cout << res << std::endl;
-    return res;
+    poids[start] = 0;
+    pq.push(PQitem(0, start));
+
+    while (!pq.empty())
+    {
+        RR::Robot courant = pq.top().robot; //courant -> elt de la file avec prio minimale
+        pq.pop();
+        //std::cout << "\n\nNOUVEAU PARCOURS - " << pq.size() << std::endl;
+        //std::cout << courant.voisins.size() << std::endl;
+        for (RR::Robot voisin : map[courant].voisins)
+        {
+            //le poids de l'arrete c'est le nombre de sauts necessaires pour aller du point courant
+            //a son voisin. Toujours 1 ici
+            if (poids[voisin] > poids[courant] + 1)
+            {
+                poids[voisin] = poids[courant] + 1;
+                pred[voisin] = courant;
+                pq.push(PQitem(poids[voisin], voisin));
+            }
+        }
+    }
+
+    if (poids[end] == INT16_MAX)
+    {
+        std::cout << "Le chemin n'existe pas" << std::endl;
+        return;
+    }
+    else
+        std::cout << "le chemin s'effectue en " << poids[end] << " mouvements" << std::endl;
+
+    //saves the positions of the path
+    std::vector<RR::Robot> chemin;
+    RR::Robot r = end;
+
+    std::string parcours = "Arrivée";
+    while (r != start)
+    {
+        parcours = "Sommet " + std::to_string(poids[r]) + ": " + std::to_string(r.location.line) + ":" + std::to_string(r.location.column) + " - " + r.StatusToString() + "\n" + parcours;
+
+        chemin.push_back(pred[r]);
+        r = pred[r];
+    }
+
+    parcours = "Départ\n" + parcours;
+
+    std::cout << parcours << std::endl;
+
+    //display the path on the console
+    /*for (RR::Robot r : chemin)
+    {
+        std::cout << "Sommet: " << std::to_string(r.location.line) + ":" + std::to_string(r.location.column) + " - " + getstatus(r.status) + " - " << std::endl;
+    }*/
 }
