@@ -178,26 +178,29 @@ namespace RR
 
   /**** Robot ****/
 
-  std::size_t RobotHash::operator()(const Robot& r) const {
+  std::size_t RobotHash::operator()(const Robot &r) const
+  {
     //create a bitset to pack line column and orientation
-    std::bitset<16*sizeof(int) + 8*sizeof(Robot::Status)> concat ;
+    std::bitset<16 * sizeof(int) + 8 * sizeof(Robot::Status)> concat;
     //pack the line
-    concat |= r.location.line ;
-    concat <<= 8*sizeof(int) ;
+    concat |= r.location.line;
+    concat <<= 8 * sizeof(int);
     //pack the colum,
-    concat |= r.location.column ;
-    concat <<= 8*sizeof(Robot::Status) ;
+    concat |= r.location.column;
+    concat <<= 8 * sizeof(Robot::Status);
     //pack the orientation
-    concat |= +r.status ;
+    concat |= +r.status;
     //hash the bitset using the standard implementation on bitsets
-    return std::hash< std::bitset<16*sizeof(int) + 8*sizeof(Robot::Status)> >()(concat) ;
+    return std::hash<std::bitset<16 * sizeof(int) + 8 * sizeof(Robot::Status)>>()(concat);
   }
 
-  bool operator!=(const Robot& r1, const Robot& r2) {
-    return !(r1.location == r2.location) && r1.status != r2.status;
+  bool operator!=(const Robot &r1, const Robot &r2)
+  {
+    return !(r1.location == r2.location) || r1.status != r2.status;
   }
 
-   bool operator==(const Robot& r1, const Robot& r2) {
+  bool operator==(const Robot &r1, const Robot &r2)
+  {
     return r1.location == r2.location && r1.status == r2.status;
   }
 

@@ -4,19 +4,6 @@
 #include <iostream>
 #include <string>
 
-std::string get_status(RR::Robot::Status s)
-{
-  return s == RR::Robot::Status::EAST    ? "EAST"
-         : s == RR::Robot::Status::NORTH ? "NORTH"
-         : s == RR::Robot::Status::WEST  ? "WEST"
-                                         : "SOUTH";
-}
-
-std::string visted(bool s)
-{
-  return s ? "VISTED" : "NOT VISITED";
-}
-
 int main()
 {
   RR::Board b("board.txt");
@@ -33,12 +20,13 @@ int main()
   std::cout << "\n\nParcous de la map du graphe" << std::endl;
   for (itr_map = g.map.begin(); itr_map != g.map.end(); itr_map++)
   {
-    std::cout << "Sommet :"
+    std::cout << "Sommet : "
               << itr_map->second.robot.location.line << ":"
               << itr_map->second.robot.location.column << " - "
-              << get_status(itr_map->second.robot.status) << " - "
-              << visted(itr_map->second.visite) << std::endl;
+              << itr_map->second.robot.StatusToString() << std::endl;
   }
+
+  printf("\n\n");
 
   RR::Robot r;
   r.location.line = 3;
@@ -47,19 +35,5 @@ int main()
 
   g.parcours(start, r);
 
-  /*int nb = 0;
-  std::cout << "ENTITY : Line:Column - STATUS" << std::endl;
-  std::map<RR::Robot, Sommet>::iterator itr = g.map.begin();
-  while (itr != g.map.end())
-  {
-    nb++;
-    std::cout << "Sommet : " << itr->first.location.line << ":" << itr->first.location.column << " - " << get_status(itr->first.status) << std::endl;
-    for (std::vector<RR::Robot>::iterator it = itr->second.voisins.begin(); it != itr->second.voisins.end(); ++it)
-    {
-      std::cout << "   Voisins : " << it->location.line << ":" << it->location.column << " - " << get_status(it->status) << std::endl;
-    }
-    itr++;
-  }
-  std::cout << nb << std::endl;*/
   return 0;
 }
