@@ -41,14 +41,13 @@ namespace RR
 
     enum struct Move
     {
-      FORWARD_1,
+      FORWARD_1 = 0,
       FORWARD_2,
       FORWARD_3,
       BACKWARD_1,
       TURN_LEFT,
       TURN_RIGHT,
-      U_TURN,
-      START
+      U_TURN
     };
 
     /* Robot status (mostly orientation) */

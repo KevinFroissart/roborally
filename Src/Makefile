@@ -7,7 +7,7 @@ OBJ = obj/
 BIN = bin/
 
 SOURCES = 
-SOURCES += $(SRC)board.cpp $(SRC)sommet.cpp $(SRC)graphe.cpp
+SOURCES += $(SRC)board.cpp $(SRC)sommet.cpp $(SRC)graphe.cpp &(SRC)joueurArtificiel.cpp
 
 OBJECTS = $(foreach source, $(SOURCES), $(OBJ)$(patsubst $(SRC)%.cpp,%.o,$(source)))
 

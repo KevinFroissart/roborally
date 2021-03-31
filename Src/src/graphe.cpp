@@ -46,13 +46,12 @@ Graphe::Graphe(RR::Board board)
     }
 }
 
-std::string printRobotData(RR::Robot r, std::unordered_map<RR::Robot, int, RR::RobotHash> poids, RR::Robot::Move move)
+std::string printRobotData(RR::Robot r, std::unordered_map<RR::Robot, int, RR::RobotHash> poids)
 {
     return "Sommet " + std::to_string(poids[r]) + ": " +
            std::to_string(r.location.line) + ":" +
            std::to_string(r.location.column) + " - " +
-           r.StatusToString() + " - " +
-           RR::MovesToString(move) + "\n";
+           r.StatusToString() + " - ";
 }
 
 bool operator<(const PQitem &s1, const PQitem &s2)
@@ -118,11 +117,11 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
     while (r != start)
     {
         std::pair<RR::Robot, RR::Robot::Move> p = pred[r];
-        parcours = printRobotData(r, poids, p.second) + parcours;
+        parcours = printRobotData(r, poids) + RR::MovesToString(p.second) + "\n" + parcours;
         r = p.first;
     }
 
-    parcours = printRobotData(start, poids, RR::Robot::Move::START) + parcours;
+    parcours = printRobotData(start, poids) + parcours;
     parcours = "Départ\n" + parcours;
 
     std::cout << parcours << std::endl;

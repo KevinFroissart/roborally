@@ -17,14 +17,12 @@ int main()
   start.location.column = 3;
   start.status = RR::Robot::Status::WEST;
 
-  printf("\n\n");
+  RR::Robot end;
+  end.location.line = 3;
+  end.location.column = 3;
+  end.status = RR::Robot::Status::EAST;
 
-  RR::Robot r;
-  r.location.line = 3;
-  r.location.column = 3;
-  r.status = RR::Robot::Status::EAST;
-
-  g.parcours(start, r);
+  g.parcours(start, end);
 
   return 0;
 }
