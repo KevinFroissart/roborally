@@ -46,6 +46,15 @@ Graphe::Graphe(RR::Board board)
     }
 }
 
+std::string printRobotData(RR::Robot r, std::unordered_map<RR::Robot, int, RR::RobotHash> poids, RR::Robot::Move move)
+{
+    return "Sommet " + std::to_string(poids[r]) + ": " +
+           std::to_string(r.location.line) + ":" +
+           std::to_string(r.location.column) + " - " +
+           r.StatusToString() + " - " +
+           RR::MovesToString(move) + "\n";
+}
+
 bool operator<(const PQitem &s1, const PQitem &s2)
 {
     return s1.distance < s2.distance;
@@ -76,7 +85,7 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
     {
         RR::Robot courant = pq.top().robot; //courant -> elt de la file avec prio minimale
         pq.pop();
-        
+
         for (std::pair<RR::Robot, RR::Robot::Move> voisin : map[courant].voisins)
         {
             RR::Robot posVoisin = voisin.first;
@@ -97,18 +106,24 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
         return;
     }
     else
-        std::cout << "le chemin s'effectue en " << poids[end] << " mouvements" << std::endl;
+    {
+        std::cout << "le chemin s'effectue en " << poids[end];
+        poids[end] == 1 ? std::cout << " mouvement" : std::cout << " mouvements";
+        std::cout << std::endl;
+    }
 
-    //saves the positions of the path
-    std::vector<std::pair<RR::Robot, RR::Robot::Move>> chemin;
     RR::Robot r = end;
 
     std::string parcours = "Arrivée";
-    while(r != start) {
+    while (r != start)
+    {
         std::pair<RR::Robot, RR::Robot::Move> p = pred[r];
-        chemin.push_back(p);
-        std::cout << "Sommet " << poids[r] << ": " << r.location.line << ":" 
-        << r.location.column << " - " << r.StatusToString() << " - " << RR::MovesToString(p.second) << std::endl;
+        parcours = printRobotData(r, poids, p.second) + parcours;
         r = p.first;
     }
+
+    parcours = printRobotData(start, poids, RR::Robot::Move::START) + parcours;
+    parcours = "Départ\n" + parcours;
+
+    std::cout << parcours << std::endl;
 }

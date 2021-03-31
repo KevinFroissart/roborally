@@ -47,7 +47,8 @@ namespace RR
       BACKWARD_1,
       TURN_LEFT,
       TURN_RIGHT,
-      U_TURN
+      U_TURN,
+      START
     };
 
     /* Robot status (mostly orientation) */

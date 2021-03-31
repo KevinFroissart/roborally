@@ -256,6 +256,9 @@ namespace RR
     case RR::Robot::Move::U_TURN:
       ret = "demi-tour";
       break;
+    case RR::Robot::Move::START:
+      ret = "";
+      break;
     }
     return ret;
   }
@@ -453,6 +456,8 @@ namespace RR
     case Robot::Move::U_TURN:
       robot_rotate(robot, Rotation::RIGHT);
       robot_rotate(robot, Rotation::RIGHT);
+      break;
+    default:
       break;
     }
 
