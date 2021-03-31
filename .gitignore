@@ -37,6 +37,8 @@
 *.exe
 *.out
 *.app
+bin/app
+bin/test_board
 
 ### VisualStudioCode ###
 .vscode/*
