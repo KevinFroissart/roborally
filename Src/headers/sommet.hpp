@@ -10,12 +10,11 @@ class Sommet
 {
 public:
     RR::Robot robot;
-    std::vector<RR::Robot> voisins;
+    std::vector<std::pair<RR::Robot, RR::Robot::Move>> voisins;
     bool visite;
-    //RR::Robot::Move move;
 
     Sommet();
-    Sommet(RR::Robot r, std::vector<RR::Robot> sommets);
+    Sommet(RR::Robot r, std::vector<std::pair<RR::Robot, RR::Robot::Move>> sommets);
 
 private:
 };

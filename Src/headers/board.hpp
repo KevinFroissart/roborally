@@ -65,13 +65,12 @@ namespace RR
 
     Location location;
     Status status;
-    Move move;
 
     //void save_move(RR::Robot::Move);
-    std::string MovesToString();
     std::string StatusToString();
   };
 
+  std::string MovesToString(Robot::Move move);
   bool operator!=(const Robot &r1, const Robot &r2);
   bool operator==(const Robot &r1, const Robot &r2);
 

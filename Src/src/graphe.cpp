@@ -28,7 +28,7 @@ Graphe::Graphe(RR::Board board)
         {
             //pour chaque direction, faire jouer le robot
             robot.status = direction;
-            std::vector<RR::Robot> voisins;
+            std::vector<std::pair<RR::Robot, RR::Robot::Move>> voisins;
             for (RR::Robot::Move move : moves)
             {
                 RR::Robot copie = robot;
@@ -37,13 +37,7 @@ Graphe::Graphe(RR::Board board)
                 if (copie.status != RR::Robot::Status::DEAD)
                 {
                     //ajoute la position a la liste des voisins
-                    copie.move = move;
-
-                    voisins.push_back(copie);
-                    if (copie.location.line == 2 && copie.location.column == 3)
-                    {
-                        std::cout << copie.MovesToString() << " - " << copie.StatusToString() << std::endl;
-                    }
+                    voisins.push_back(std::pair<RR::Robot, RR::Robot::Move>(copie, move));
                 }
             }
             Sommet sommet(robot, voisins); //construit le sommet a inserer
@@ -67,7 +61,7 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
 {
     std::priority_queue<PQitem> pq;
     std::unordered_map<RR::Robot, int, RR::RobotHash> poids;
-    std::unordered_map<RR::Robot, RR::Robot, RR::RobotHash> pred;
+    std::unordered_map<RR::Robot, std::pair<RR::Robot, RR::Robot::Move>, RR::RobotHash> pred;
     //std::set<RR::Robot> visites; idee pour checker les sommets deja visites
 
     //initialize weights
@@ -82,17 +76,17 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
     {
         RR::Robot courant = pq.top().robot; //courant -> elt de la file avec prio minimale
         pq.pop();
-        //std::cout << "\n\nNOUVEAU PARCOURS - " << pq.size() << std::endl;
-        //std::cout << courant.voisins.size() << std::endl;
-        for (RR::Robot voisin : map[courant].voisins)
+        
+        for (std::pair<RR::Robot, RR::Robot::Move> voisin : map[courant].voisins)
         {
+            RR::Robot posVoisin = voisin.first;
             //le poids de l'arrete c'est le nombre de sauts necessaires pour aller du point courant
             //a son voisin. Toujours 1 ici
-            if (poids[voisin] > poids[courant] + 1)
+            if (poids[posVoisin] > poids[courant] + 1)
             {
-                poids[voisin] = poids[courant] + 1;
-                pred[voisin] = courant;
-                pq.push(PQitem(poids[voisin], voisin));
+                poids[posVoisin] = poids[courant] + 1;
+                pred[posVoisin] = {courant, voisin.second};
+                pq.push(PQitem(poids[posVoisin], posVoisin));
             }
         }
     }
@@ -106,34 +100,15 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
         std::cout << "le chemin s'effectue en " << poids[end] << " mouvements" << std::endl;
 
     //saves the positions of the path
-    std::vector<RR::Robot> chemin;
+    std::vector<std::pair<RR::Robot, RR::Robot::Move>> chemin;
     RR::Robot r = end;
 
     std::string parcours = "Arrivée";
-    while (r != start)
-    {
-        parcours = "Sommet " + std::to_string(poids[r]) + ": " +
-                   std::to_string(r.location.line) + ":" +
-                   std::to_string(r.location.column) + " - " +
-                   r.StatusToString() + " - " +
-                   r.MovesToString() + "\n" + parcours;
-
-        chemin.push_back(pred[r]);
-        r = pred[r];
+    while(r != start) {
+        std::pair<RR::Robot, RR::Robot::Move> p = pred[r];
+        chemin.push_back(p);
+        std::cout << "Sommet " << poids[r] << ": " << r.location.line << ":" 
+        << r.location.column << " - " << r.StatusToString() << " - " << RR::MovesToString(p.second) << std::endl;
+        r = p.first;
     }
-    parcours = "Sommet " + std::to_string(poids[start]) + ": " +
-               std::to_string(start.location.line) + ":" +
-               std::to_string(start.location.column) + " - " +
-               start.StatusToString() + " - " +
-               start.MovesToString() + "\n" + parcours;
-
-    parcours = "Départ\n" + parcours;
-
-    std::cout << parcours << std::endl;
-
-    //display the path on the console
-    /*for (RR::Robot r : chemin)
-    {
-        std::cout << "Sommet: " << std::to_string(r.location.line) + ":" + std::to_string(r.location.column) + " - " + getstatus(r.status) + " - " << std::endl;
-    }*/
 }

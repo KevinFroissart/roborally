@@ -17,15 +17,6 @@ int main()
   start.location.column = 3;
   start.status = RR::Robot::Status::WEST;
 
-  /*std::cout << "\n\nParcous de la map du graphe" << std::endl;
-  for (itr_map = g.map.begin(); itr_map != g.map.end(); itr_map++)
-  {
-    std::cout << "Sommet : "
-              << itr_map->second.robot.location.line << ":"
-              << itr_map->second.robot.location.column << " - "
-              << itr_map->second.robot.StatusToString() << std::endl;
-  }
-*/
   printf("\n\n");
 
   RR::Robot r;

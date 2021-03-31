@@ -230,7 +230,7 @@ namespace RR
   }
 
   /** String format for moves */
-  std::string Robot::MovesToString()
+  std::string MovesToString(Robot::Move move)
   {
     std::string ret;
     switch (move)
