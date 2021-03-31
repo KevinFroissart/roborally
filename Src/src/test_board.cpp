@@ -1,5 +1,6 @@
 #include "../headers/board.hpp"
 #include "../headers/graphe.hpp"
+#include "../headers/joueurArtificiel.hpp"
 
 #include <iostream>
 #include <string>
@@ -23,6 +24,17 @@ int main()
   end.status = RR::Robot::Status::EAST;
 
   g.parcours(start, end);
+
+  JoueurArtificiel ja;
+
+  std::vector<RR::Robot::Move> tirage = ja.tirage(9);
+
+  std::cout << std::endl;
+
+  for (int i = 0; i < tirage.size(); i++)
+  {
+    std::cout << RR::MovesToString(tirage[i]) << std::endl;
+  }
 
   return 0;
 }

@@ -8,8 +8,7 @@ std::vector<RR::Robot::Move> JoueurArtificiel::tirage(int nbCarte)
     srand(time(NULL));
     for (int i = 0; i < nbCarte; i++)
     {
-        int random = rand() % 7 + 1;
-        switch (random)
+        switch (rand() % 7 + 1)
         {
         case 1:
             tirage.push_back(RR::Robot::Move::BACKWARD_1);
@@ -35,4 +34,8 @@ std::vector<RR::Robot::Move> JoueurArtificiel::tirage(int nbCarte)
         }
     }
     return tirage;
+}
+
+void JoueurArtificiel::method(Graphe graphe, RR::Robot robot, std::vector<RR::Robot::Move> actions)
+{
 }
