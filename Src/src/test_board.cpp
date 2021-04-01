@@ -11,7 +11,6 @@ int main()
   b.save("/tmp/cpy.txt");
 
   Graphe g(b);
-  std::unordered_map<RR::Robot, Sommet, RR::RobotHash>::iterator itr_map;
 
   RR::Robot start;
   start.location.line = 2;
