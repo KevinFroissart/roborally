@@ -99,7 +99,7 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
         }
     }
 
-    if (poids[end] == INT16_MAX)
+    if (poids[end] == INT16_MAX || poids[end] == 0)
     {
         std::cout << "Le chemin n'existe pas" << std::endl;
         return;

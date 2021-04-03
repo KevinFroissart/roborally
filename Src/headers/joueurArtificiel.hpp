@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "board.hpp"
-
+#include "graphe.hpp"
 class JoueurArtificiel
 {
 public:
