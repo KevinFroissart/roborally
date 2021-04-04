@@ -24,16 +24,18 @@ int main()
 
   g.parcours(start, end);
 
-  JoueurArtificiel ja;
+  JoueurArtificiel ja(start);
 
   std::vector<RR::Robot::Move> tirage = ja.tirage(9);
 
-  std::cout << std::endl;
-
-  for (int i = 0; i < tirage.size(); i++)
+  /*for (unsigned int i = 0; i < tirage.size(); i++)
   {
     std::cout << RR::MovesToString(tirage[i]) << std::endl;
-  }
+  }*/
+
+  ja.JouerTour(tirage, b);
+
+  std::cout << std::endl;
 
   return 0;
 }

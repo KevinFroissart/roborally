@@ -2,7 +2,8 @@
 #include <time.h>
 #include <stdlib.h>
 
-JoueurArtificiel::JoueurArtificiel(RR::Robot position) {
+JoueurArtificiel::JoueurArtificiel(RR::Robot position)
+{
     this->position = position;
 }
 
@@ -15,29 +16,64 @@ std::vector<RR::Robot::Move> JoueurArtificiel::tirage(int nbCarte)
     return tirage;
 }
 
-std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::Move> tirage, RR::Board board) {
-    RR::Robot posDepart = this->position;
-    std::vector<RR::Robot::Move> meilleurChoix;
+std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::Move> tirage, RR::Board board)
+{
+    MTC mtc;
+    mtc.etape = 0;
+    mtc.poids = 0;
+    mtc.robot = this->position;
+    mtc.tirage = tirage;
+    //mtc.fils.push_back(mtc);
 
-    //avec notre tirage, on cree un arbre à 9 branches representant les coups possibles. 
-    for(RR::Robot::Move move : tirage) {
-        //L'arbre aura une profondeur de 5 (on joue 5 coups par tour)
-        for (int i = 0; i < MAX_CARTES_MAIN; i++) {
-            //boucle sur toutes les cartes restantes que l'on peut jouer
-            //chaque branche aura un enfant de moins que la precedente (carte deja jouee)
-            board.play(posDepart, move);
-            //On va parcourir l'arbre afin de trouver quelle branche nous permet d'arriver soit a la case 
-            //objectif, soit a la case la plus proche de l'objectif (que l'on determine via un appel du plus court chemin)
-            if (posDepart.status == RR::Robot::Status::DEAD) 
-                break;
-            if (posDepart == objectif) {
-                //retourner la serie de coup qui a permis d'arriver a lo'bjectif, plus n'importes quelles autres
-                // si il y a moins de 5 coups
+    std::queue<MTC> queue;
+    queue.push(mtc);
+
+    int possibilite = 0;
+
+    while (!queue.empty())
+    {
+
+        MTC courant = queue.front();
+        queue.pop();
+        for (unsigned int i = 0; i < courant.tirage.size(); i++) // pour chaque move possible du MTC courant
+        {
+
+            RR::Robot copie = courant.robot;
+            board.play(copie, courant.tirage.at(i)); // on essaie de jouer le coup
+            if (copie.status != RR::Robot::Status::DEAD)
+            {
+                // si le coup passe, on assigne la nouvelle position au fils du MTC courant
+                MTC tmp;
+                tmp.etape = courant.etape + 1;
+                tmp.poids = courant.poids + 1;
+                tmp.robot = copie;
+                tmp.pred = {courant.robot, courant.tirage.at(i)};
+                tmp.coups = courant.coups;
+                tmp.coups.push_back(courant.tirage.at(i));
+                tmp.tirage = courant.tirage;
+                tmp.tirage.erase(tmp.tirage.begin() + i);
+                courant.fils.push_back(tmp);
+
+                std::cout << "\nMTC\netape: " << tmp.etape
+                          << "\npoids: " << tmp.poids
+                          << "\nposition: " << tmp.robot.location.line << ":" << tmp.robot.location.column
+                          << "\ncoup: " << RR::MovesToString(courant.tirage.at(i))
+                          << "\ntaille tirage: " << tmp.tirage.size()
+                          << "\ntaille coups: " << tmp.coups.size()
+                          << "\nnb passage: " << ++possibilite
+                          << "\n  |\n";
+
+                if (tmp.tirage.size() >= 5)
+                {
+                    queue.push(tmp); // on ajoute le fils à la file pour qu'il soit traité plus tard
+                    std::cout << "taille queue: " << queue.size() << std::endl
+                              << std::endl;
+                }
             }
-
         }
-        
+        std::cout << "ça boucle? " << std::endl;
     }
 
-    return meilleurChoix;
+    std::cout << possibilite << std::endl;
+    return tirage;
 }
