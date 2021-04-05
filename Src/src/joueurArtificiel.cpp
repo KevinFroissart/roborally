@@ -2,9 +2,10 @@
 #include <time.h>
 #include <stdlib.h>
 
-JoueurArtificiel::JoueurArtificiel(RR::Robot position)
+JoueurArtificiel::JoueurArtificiel(RR::Robot position, RR::Robot objectif)
 {
     this->position = position;
+    this->objectif = objectif;
 }
 
 std::vector<RR::Robot::Move> JoueurArtificiel::tirage(int nbCarte)
@@ -16,7 +17,7 @@ std::vector<RR::Robot::Move> JoueurArtificiel::tirage(int nbCarte)
     return tirage;
 }
 
-std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::Move> tirage, RR::Board board)
+std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::Move> tirage, RR::Board board, Graphe graphe)
 {
     MTC mtc;
     mtc.etape = 0;
@@ -40,12 +41,15 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
 
             RR::Robot copie = courant.robot;
             board.play(copie, courant.tirage.at(i)); // on essaie de jouer le coup
+            if (copie == objectif) {
+                return tirage;
+            }
             if (copie.status != RR::Robot::Status::DEAD)
             {
                 // si le coup passe, on assigne la nouvelle position au fils du MTC courant
                 MTC tmp;
                 tmp.etape = courant.etape + 1;
-                tmp.poids = courant.poids + 1;
+                tmp.poids = graphe.parcours(copie, objectif);
                 tmp.robot = copie;
                 tmp.pred = {courant.robot, courant.tirage.at(i)};
                 tmp.coups = courant.coups;

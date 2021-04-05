@@ -65,7 +65,7 @@ PQitem::PQitem(int distance, RR::Robot robot)
     this->robot = robot;
 }
 
-void Graphe::parcours(RR::Robot start, RR::Robot end)
+int Graphe::parcours(RR::Robot start, RR::Robot end)
 {
     std::priority_queue<PQitem> pq;
     std::unordered_map<RR::Robot, int, RR::RobotHash> poids;
@@ -102,7 +102,7 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
     if (poids[end] == INT16_MAX || poids[end] == 0)
     {
         std::cout << "Le chemin n'existe pas" << std::endl;
-        return;
+        return -1;
     }
     else
     {
@@ -112,12 +112,13 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
     }
 
     RR::Robot r = end;
-
+    std::vector<std::pair<RR::Robot, RR::Robot::Move>> chemin;
     std::string parcours = "Arrivée";
     while (r != start)
     {
         std::pair<RR::Robot, RR::Robot::Move> p = pred[r];
         parcours = printRobotData(r, poids) + RR::MovesToString(p.second) + "\n" + parcours;
+        chemin.push_back(p);
         r = p.first;
     }
 
@@ -125,4 +126,6 @@ void Graphe::parcours(RR::Robot start, RR::Robot end)
     parcours = "Départ\n" + parcours;
 
     std::cout << parcours << std::endl;
+
+    return chemin.size();
 }

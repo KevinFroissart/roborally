@@ -24,7 +24,7 @@ int main()
 
   g.parcours(start, end);
 
-  JoueurArtificiel ja(start);
+  JoueurArtificiel ja(start, end);
 
   std::vector<RR::Robot::Move> tirage = ja.tirage(9);
 
@@ -33,7 +33,7 @@ int main()
     std::cout << RR::MovesToString(tirage[i]) << std::endl;
   }*/
 
-  ja.JouerTour(tirage, b);
+  ja.JouerTour(tirage, b, g);
 
   std::cout << std::endl;
 

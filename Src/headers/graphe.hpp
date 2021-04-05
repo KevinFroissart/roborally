@@ -13,7 +13,7 @@ public:
     Graphe(RR::Board b);
     std::string ToString();
     std::unordered_map<RR::Robot, Sommet, RR::RobotHash> map;
-    void parcours(RR::Robot start, RR::Robot end);
+    int parcours(RR::Robot start, RR::Robot end);
 
 private:
     const std::array<RR::Robot::Move, 7> moves = {

@@ -13,9 +13,9 @@ public:
     RR::Robot objectif;
     const int NB_COUPS = 5;
 
-    JoueurArtificiel(RR::Robot position);
+    JoueurArtificiel(RR::Robot position, RR::Robot objectif);
     std::vector<RR::Robot::Move> tirage(int nbCarte);
-    std::vector<RR::Robot::Move> JouerTour(std::vector<RR::Robot::Move> tirage, RR::Board board);
+    std::vector<RR::Robot::Move> JouerTour(std::vector<RR::Robot::Move> tirage, RR::Board board, Graphe graphe);
 
 private:
     struct MTC
