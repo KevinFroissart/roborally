@@ -41,9 +41,6 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
 
             RR::Robot copie = courant.robot;
             board.play(copie, courant.tirage.at(i)); // on essaie de jouer le coup
-            if (copie == objectif) {
-                return tirage;
-            }
             if (copie.status != RR::Robot::Status::DEAD)
             {
                 // si le coup passe, on assigne la nouvelle position au fils du MTC courant
@@ -66,6 +63,10 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
                           << "\ntaille coups: " << tmp.coups.size()
                           << "\nnb passage: " << ++possibilite
                           << "\n  |\n";
+
+                if (copie == objectif) {
+                    return tmp.coups;
+                }
 
                 if (tmp.tirage.size() >= 5)
                 {

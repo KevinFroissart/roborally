@@ -13,8 +13,8 @@ int main()
   Graphe g(b);
 
   RR::Robot start;
-  start.location.line = 2;
-  start.location.column = 3;
+  start.location.line = 0;
+  start.location.column = 1;
   start.status = RR::Robot::Status::WEST;
 
   RR::Robot end;
@@ -33,7 +33,11 @@ int main()
     std::cout << RR::MovesToString(tirage[i]) << std::endl;
   }*/
 
-  ja.JouerTour(tirage, b, g);
+  std::vector<RR::Robot::Move> coups = ja.JouerTour(tirage, b, g);
+  std::cout << "résultat du tour: " << std::endl;
+  for(RR::Robot::Move coup : coups) {
+    std::cout << RR::MovesToString(coup) << std::endl;
+  }
 
   std::cout << std::endl;
 
