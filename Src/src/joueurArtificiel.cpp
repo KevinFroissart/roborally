@@ -80,5 +80,6 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
     }
 
     std::cout << possibilite << std::endl;
-    return tirage;
+    std::vector<RR::Robot::Move> emptyList;
+    return emptyList;
 }
