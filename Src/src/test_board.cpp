@@ -18,8 +18,8 @@ int main()
   start.status = RR::Robot::Status::WEST;
 
   RR::Robot end;
-  end.location.line = 3;
-  end.location.column = 3;
+  end.location.line = 5;
+  end.location.column = 4;
   end.status = RR::Robot::Status::EAST;
 
   g.parcours(start, end);

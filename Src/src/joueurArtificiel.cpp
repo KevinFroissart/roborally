@@ -30,6 +30,7 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
     queue.push(mtc);
 
     int possibilite = 0;
+    MTC meilleurJeu; // stocke le meilleur chemin
 
     while (!queue.empty())
     {
@@ -74,11 +75,19 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
                     std::cout << "taille queue: " << queue.size() << std::endl
                               << std::endl;
                 }
+
+                if (tmp.etape == 5) {
+                    if (meilleurJeu.coups.size() == 0) {
+                        meilleurJeu.coups = tmp.coups;
+                    } else {
+                        meilleurJeu = tmp.poids < meilleurJeu.poids ? tmp : meilleurJeu;
+                    }
+                }
             }
         }
         std::cout << "ça boucle? " << std::endl;
     }
 
     std::cout << possibilite << std::endl;
-    return tirage;
+    return meilleurJeu.coups;
 }
