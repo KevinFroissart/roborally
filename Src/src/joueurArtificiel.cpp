@@ -17,13 +17,6 @@ std::vector<RR::Robot::Move> JoueurArtificiel::tirage(int nbCarte)
     return tirage;
 }
 
-void TirageToString(std::vector<RR::Robot::Move> moves) {
-    std::cout << "Tirage initial:" << std::endl;
-    for (RR::Robot::Move move : moves) {
-        std::cout << RR::MovesToString(move) << std::endl;
-    }
-}
-
 std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::Move> tirage, RR::Board board, Graphe graphe)
 {
     MTC mtc;
@@ -63,7 +56,7 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
                 courant.fils.push_back(tmp);
 
                 std::cout << "\nMTC\netape: " << tmp.etape
-                          << "\nnouveau meilleur sommet, poids: " << meilleurJeu.poids
+                          << "\npoids: " << tmp.poids
                           << "\nposition: " << tmp.robot.location.line << ":" << tmp.robot.location.column
                           << "\ncoup: " << RR::MovesToString(courant.tirage.at(i))
                           << "\ntaille tirage: " << tmp.tirage.size()
@@ -71,9 +64,8 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
                           << "\nnb passage: " << ++possibilite
                           << "\n  |\n";
 
-                if (copie == objectif) {
-                    TirageToString(tirage);
-                    std::cout << "solution trouvee, fin de la recherche" << std::endl;
+                if (copie == objectif)
+                {
                     return tmp.coups;
                 }
 
@@ -83,21 +75,11 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
                     std::cout << "taille queue: " << queue.size() << std::endl
                               << std::endl;
                 }
-
-                if (tmp.etape == 5) {
-                    if (meilleurJeu.coups.size() == 0) {
-                        meilleurJeu.coups = tmp.coups;
-                    } else {
-                        if (tmp.poids < meilleurJeu.poids) {
-                            meilleurJeu = tmp;
-                        }
-                    }
-                }
             }
         }
     }
 
-    TirageToString(tirage);
     std::cout << possibilite << std::endl;
-    return meilleurJeu.coups;
+    std::vector<RR::Robot::Move> emptyList;
+    return emptyList;
 }

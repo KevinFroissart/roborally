@@ -124,7 +124,7 @@ int Graphe::parcours(RR::Robot start, RR::Robot end)
     parcours = printRobotData(start, poids) + parcours;
     parcours = "Départ\n" + parcours;
 
-    //std::cout << parcours << std::endl;
+    std::cout << parcours << std::endl;
 
-    return poids[end];
+    return chemin.size();
 }
