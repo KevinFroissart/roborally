@@ -70,7 +70,6 @@ int Graphe::parcours(RR::Robot start, RR::Robot end)
     std::priority_queue<PQitem> pq;
     std::unordered_map<RR::Robot, int, RR::RobotHash> poids;
     std::unordered_map<RR::Robot, std::pair<RR::Robot, RR::Robot::Move>, RR::RobotHash> pred;
-    //std::set<RR::Robot> visites; idee pour checker les sommets deja visites
 
     //initialize weights
     for (std::pair<const RR::Robot, Sommet> sommet : map)
