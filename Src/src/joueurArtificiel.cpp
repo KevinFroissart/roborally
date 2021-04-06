@@ -24,7 +24,6 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
     mtc.poids = 0;
     mtc.robot = this->position;
     mtc.tirage = tirage;
-    //mtc.fils.push_back(mtc);
 
     std::queue<MTC> queue;
     queue.push(mtc);
@@ -65,7 +64,8 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
                           << "\nnb passage: " << ++possibilite
                           << "\n  |\n";
 
-                if (copie == objectif) {
+                if (copie == objectif)
+                {
                     return tmp.coups;
                 }
 
@@ -76,16 +76,15 @@ std::vector<RR::Robot::Move> JoueurArtificiel::JouerTour(std::vector<RR::Robot::
                               << std::endl;
                 }
 
-                if (tmp.etape == 5) {
-                    if (meilleurJeu.coups.size() == 0) {
+                if (tmp.etape == 5)
+                {
+                    if (meilleurJeu.coups.size() == 0)
                         meilleurJeu.coups = tmp.coups;
-                    } else {
+                    else
                         meilleurJeu = tmp.poids < meilleurJeu.poids ? tmp : meilleurJeu;
-                    }
                 }
             }
         }
-        std::cout << "ça boucle? " << std::endl;
     }
 
     std::cout << possibilite << std::endl;

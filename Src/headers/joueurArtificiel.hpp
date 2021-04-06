@@ -11,7 +11,6 @@ class JoueurArtificiel
 public:
     RR::Robot position;
     RR::Robot objectif;
-    const int NB_COUPS = 5;
 
     JoueurArtificiel(RR::Robot position, RR::Robot objectif);
     std::vector<RR::Robot::Move> tirage(int nbCarte);
@@ -28,8 +27,6 @@ private:
         std::vector<RR::Robot::Move> tirage;
         std::vector<RR::Robot::Move> coups;
     };
-
-    void recurs(MTC mtc, RR::Board board, std::queue<MTC> *queue);
 };
 
 #endif

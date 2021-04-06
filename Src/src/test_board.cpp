@@ -7,10 +7,10 @@
 
 int main()
 {
-  RR::Board b("board.txt");
-  b.save("/tmp/cpy.txt");
+  RR::Board board("board.txt");
+  board.save("/tmp/cpy.txt");
 
-  Graphe g(b);
+  Graphe graphe(board);
 
   RR::Robot start;
   start.location.line = 0;
@@ -18,24 +18,18 @@ int main()
   start.status = RR::Robot::Status::WEST;
 
   RR::Robot end;
-  end.location.line = 5;
-  end.location.column = 4;
+  end.location.line = 3;
+  end.location.column = 3;
   end.status = RR::Robot::Status::EAST;
 
-  g.parcours(start, end);
+  graphe.parcours(start, end);
 
   JoueurArtificiel ja(start, end);
 
-  std::vector<RR::Robot::Move> tirage = ja.tirage(9);
-
-  /*for (unsigned int i = 0; i < tirage.size(); i++)
-  {
-    std::cout << RR::MovesToString(tirage[i]) << std::endl;
-  }*/
-
-  std::vector<RR::Robot::Move> coups = ja.JouerTour(tirage, b, g);
+  std::vector<RR::Robot::Move> coups = ja.JouerTour(ja.tirage(9), board, graphe);
   std::cout << "résultat du tour: " << std::endl;
-  for(RR::Robot::Move coup : coups) {
+  for (RR::Robot::Move coup : coups)
+  {
     std::cout << RR::MovesToString(coup) << std::endl;
   }
 
