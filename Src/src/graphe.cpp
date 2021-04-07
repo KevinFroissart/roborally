@@ -111,13 +111,11 @@ int Graphe::parcours(RR::Robot start, RR::Robot end)
     }
 
     RR::Robot r = end;
-    std::vector<std::pair<RR::Robot, RR::Robot::Move>> chemin;
     std::string parcours = "Arrivée";
     while (r != start)
     {
         std::pair<RR::Robot, RR::Robot::Move> p = pred[r];
         parcours = printRobotData(r, poids) + RR::MovesToString(p.second) + "\n" + parcours;
-        chemin.push_back(p);
         r = p.first;
     }
 
@@ -126,5 +124,5 @@ int Graphe::parcours(RR::Robot start, RR::Robot end)
 
     std::cout << parcours << std::endl;
 
-    return chemin.size();
+    return poids[end];
 }
